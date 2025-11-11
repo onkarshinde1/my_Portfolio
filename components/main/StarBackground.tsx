@@ -3,7 +3,7 @@
 import React, { useRef, Suspense, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
-import { Points as ThreePoints } from "three"; // ✅ correct type import
+import * as THREE from "three";
 import { inSphere } from "maath/random";
 
 interface StarBackgroundProps {
@@ -11,7 +11,7 @@ interface StarBackgroundProps {
 }
 
 const StarBackground = (props: StarBackgroundProps) => {
-  const ref = useRef<ThreePoints>(null); // ✅ proper ref type
+  const ref = useRef<THREE.Points>(null);
 
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
