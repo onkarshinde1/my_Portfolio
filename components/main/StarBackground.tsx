@@ -3,25 +3,23 @@
 import React, { useRef, Suspense, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
-import { Group } from "three";
+import { Points as ThreePoints } from "three"; // ✅ correct type import
 import { inSphere } from "maath/random";
 
 interface StarBackgroundProps {
-  [key: string]: unknown; // ✅ Replace `any` with `unknown`
+  [key: string]: unknown;
 }
 
 const StarBackground = (props: StarBackgroundProps) => {
-  const ref = useRef<Group>(null);
+  const ref = useRef<ThreePoints>(null); // ✅ proper ref type
 
-  // Generate star positions
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
-    inSphere(positions, { radius: 1.2 }); // ✅ No ts-ignore needed
+    inSphere(positions, { radius: 1.2 });
     return positions;
   }, []);
 
-  // Animate star rotation
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (ref.current) {
       ref.current.rotation.x -= delta / 10;
       ref.current.rotation.y -= delta / 15;
