@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, Suspense, useMemo } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
-import * as THREE from "three";
 import { inSphere } from "maath/random";
 
 interface StarBackgroundProps {
@@ -11,7 +10,7 @@ interface StarBackgroundProps {
 }
 
 const StarBackground = (props: StarBackgroundProps) => {
-  const groupRef = useRef<THREE.Group>(null);
+  const [rotation, setRotation] = useState<[number, number, number]>([0, 0, Math.PI / 4]);
 
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
@@ -20,14 +19,15 @@ const StarBackground = (props: StarBackgroundProps) => {
   }, []);
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.x -= delta / 10;
-      groupRef.current.rotation.y -= delta / 15;
-    }
+    setRotation(([x, y, z]) => [
+      x - delta / 10,
+      y - delta / 15,
+      z
+    ]);
   });
 
   return (
-    <group ref={groupRef} rotation={[0, 0, Math.PI / 4]}>
+    <group rotation={rotation}>
       <Points positions={sphere} stride={3} frustumCulled {...props}>
         <PointMaterial
           transparent
