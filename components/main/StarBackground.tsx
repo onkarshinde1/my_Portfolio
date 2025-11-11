@@ -1,25 +1,26 @@
 "use client";
 
-import React, { useState, useRef, Suspense, useMemo } from "react";
+import React, { useRef, Suspense, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { Group } from "three";
-// @ts-ignore
-import * as random from "maath/random/dist/maath-random.esm";
+import { inSphere } from "maath/random";
 
 interface StarBackgroundProps {
-  [key: string]: any;
+  [key: string]: unknown; // ✅ Replace `any` with `unknown`
 }
 
 const StarBackground = (props: StarBackgroundProps) => {
   const ref = useRef<Group>(null);
-  
+
+  // Generate star positions
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
-    random.inSphere(positions, { radius: 1.2 });
+    inSphere(positions, { radius: 1.2 }); // ✅ No ts-ignore needed
     return positions;
   }, []);
 
+  // Animate star rotation
   useFrame((state, delta) => {
     if (ref.current) {
       ref.current.rotation.x -= delta / 10;
@@ -29,18 +30,12 @@ const StarBackground = (props: StarBackgroundProps) => {
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
-      <Points
-        ref={ref}
-        positions={sphere}
-        stride={3}
-        frustumCulled
-        {...props}
-      >
+      <Points ref={ref} positions={sphere} stride={3} frustumCulled {...props}>
         <PointMaterial
           transparent
           color="#fff"
           size={0.002}
-          sizeAttenuation={true}
+          sizeAttenuation
           depthWrite={false}
         />
       </Points>
