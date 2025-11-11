@@ -11,7 +11,7 @@ interface StarBackgroundProps {
 }
 
 const StarBackground = (props: StarBackgroundProps) => {
-  const ref = useRef<THREE.Points>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
@@ -20,15 +20,15 @@ const StarBackground = (props: StarBackgroundProps) => {
   }, []);
 
   useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.x -= delta / 10;
-      ref.current.rotation.y -= delta / 15;
+    if (groupRef.current) {
+      groupRef.current.rotation.x -= delta / 10;
+      groupRef.current.rotation.y -= delta / 15;
     }
   });
 
   return (
-    <group rotation={[0, 0, Math.PI / 4]}>
-      <Points ref={ref} positions={sphere} stride={3} frustumCulled {...props}>
+    <group ref={groupRef} rotation={[0, 0, Math.PI / 4]}>
+      <Points positions={sphere} stride={3} frustumCulled {...props}>
         <PointMaterial
           transparent
           color="#fff"
