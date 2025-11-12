@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-interface Props {
+type Props = {
   src: string;
   title: string;
   description: string;
