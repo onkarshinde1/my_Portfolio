@@ -12,8 +12,11 @@ interface StarBackgroundProps {
 const StarBackground = (props: StarBackgroundProps) => {
   const [rotation, setRotation] = useState<[number, number, number]>([0, 0, Math.PI / 4]);
 
+  // Responsive star count based on screen size
   const sphere = useMemo(() => {
-    const positions = new Float32Array(5000 * 3);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const starCount = isMobile ? 3000 : 5000; // Fewer stars on mobile for better performance
+    const positions = new Float32Array(starCount * 3);
     inSphere(positions, { radius: 1.2 });
     return positions;
   }, []);
@@ -26,13 +29,16 @@ const StarBackground = (props: StarBackgroundProps) => {
     ]);
   });
 
+  // Responsive point size
+  const pointSize = typeof window !== 'undefined' && window.innerWidth < 640 ? 0.0025 : 0.002;
+
   return (
     <group rotation={rotation}>
       <Points positions={sphere} stride={3} frustumCulled {...props}>
         <PointMaterial
           transparent
           color="#fff"
-          size={0.002}
+          size={pointSize}
           sizeAttenuation
           depthWrite={false}
         />
@@ -42,8 +48,12 @@ const StarBackground = (props: StarBackgroundProps) => {
 };
 
 const StarsCanvas = () => (
-  <div className="w-full h-auto fixed inset-0 z-[20]">
-    <Canvas camera={{ position: [0, 0, 1] }}>
+  <div className="w-full h-full sm:h-auto fixed inset-0 z-[20]">
+    <Canvas 
+      camera={{ position: [0, 0, 1] }}
+      className="w-full h-full"
+      dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? [1, 1.5] : [1, 2]} // Lower DPR on mobile for performance
+    >
       <Suspense fallback={null}>
         <StarBackground />
       </Suspense>

@@ -31,12 +31,14 @@ const SkillDataProvider = ({ src, width, height, index} : Props) => {
   animate={inView ? "visible" : "hidden"}
   custom={index}
   transition={{delay: index * animationDelay}}
+  className='hover:scale-110 transition-transform duration-200'
   >
     <Image
-src={src}
-width={width}
-height={height}
-alt='skill image'
+      src={src}
+      width={width}
+      height={height}
+      alt='skill image'
+      className='w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-auto lg:h-auto object-contain'
     />
   </motion.div>
   )

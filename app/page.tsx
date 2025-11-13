@@ -7,12 +7,11 @@ import Projects from "@/components/main/Projects";
 export default function Home() {
   return (
     <main className="h-full w-full">
-      <div className="flex flex-col gap-20">
+      <div className="flex flex-col gap-10 sm:gap-12 md:gap-16 lg:gap-20">
         <Hero />
         <Skills />
         <Encryption/>
         <Projects />
-        
       </div>
     </main>
   );
